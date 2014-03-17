@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/FlexiBytes/SEPA.png?branch=master)](https://travis-ci.org/FlexiBytes/SEPA)
+
 # SEPA
 This module provides a basic IBAN verification class
 
