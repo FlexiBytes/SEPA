@@ -5,7 +5,8 @@
     "autoload": {"psr-0": {"": "src"}},
 
     "require": {
-        "behat/behat": "2.4.*@stable"
+        "behat/behat": "2.4.*@stable",
+        "squizlabs/php_codesniffer": "1.*"
     },
     "config": {
         "bin-dir": "bin/"

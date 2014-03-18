@@ -1,14 +1,47 @@
 <?php
 
+/**
+ * SEPA Module
+ *
+ * PHP version 5
+ *
+ * @category  SEPA
+ * @package   FlexiBytes.SEPA
+ * @author    Thorsten Schmidt <t.schmidt@flexibytes.com>
+ * @copyright 2014 FlexiBytes
+ * @license   MIT License (MIT)
+ * @link      http://www.flexibytes.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 namespace Sepa\IBAN;
 
 /**
- * Validate IBANs
+ * Validation class.
  *
- * @author Thorsten Schmidt
- * @date 14.03.2014
- * @version 1.0
- * @since 1.0
+ * @category  SEPA
+ * @package   FlexiBytes.SEPA
+ * @author    Thorsten Schmidt <t.schmidt@flexibytes.com>
+ * @copyright 2014 FlexiBytes
+ * @license   MIT License (MIT)
+ * @link      http://www.flexibytes.com
  */
 class Validation
 {
@@ -30,7 +63,7 @@ class Validation
     /**
      * Validate IBAN
      *
-     * @param string    IBAN
+     * @param string $iban IBAN
      *
      * @return mixed    true on success, throws exception on fail
      * @access  public
@@ -41,10 +74,9 @@ class Validation
      * @version 1.0
      * @since 1.0
      */
-    public function valid($iban)
+    public function check($iban)
     {
-        if ($this->validate($iban))
-        {
+        if ($this->validate($iban)) {
             return true;
         }
 
@@ -54,7 +86,7 @@ class Validation
     /**
      * Validate IBAN
      *
-     * @param string    IBAN
+     * @param string $iban IBAN
      *
      * @return boolean  true/false
      * @access  public
@@ -64,10 +96,9 @@ class Validation
      * @version 1.0
      * @since 1.0
      */
-    public function is_valid($iban)
+    public function isValid($iban)
     {
-        if ($this->validate($iban))
-        {
+        if ($this->validate($iban)) {
             return true;
         }
 
@@ -195,7 +226,7 @@ class Validation
     /**
      * Validate an IBAN
      *
-     * @param string    IBAN to check
+     * @param string $iban IBAN to check
      *
      * @return boolean true/false
      * @access  public
@@ -210,20 +241,18 @@ class Validation
         // Remove whitespaces
         $iban = str_replace(' ', '', $iban);
 
-        if ( ! $this->iban_length_is_valid($iban))
-        {
+        if (! $this->ibanLengthIsValid($iban)) {
             return false;
         }
 
         // Convert to numeric
-        $iban = $this->_prepare_iban($iban);
+        $iban = $this->prepareIban($iban);
 
         // Divide numeric IBAN by 97
-        $division_remainder = $this->_divide_by_97_helper($iban);
+        $division_remainder = $this->divideBy97Helper($iban);
 
         // Remainder has to be exactly "1" to be valid IBAN
-        if ( $division_remainder !== 1 )
-        {
+        if ($division_remainder !== 1) {
             return false;
         }
 
@@ -233,7 +262,7 @@ class Validation
     /**
      * Prepare IBAN to be used in calculation
      *
-     * @param string    IBAN
+     * @param string $iban IBAN
      *
      * @return IBAN
      * @access  protected
@@ -243,7 +272,7 @@ class Validation
      * @version 1.0
      * @since 1.0
      */
-    protected function _prepare_iban($iban)
+    protected function prepareIban($iban)
     {
         // Remove "IBAN" from string, if given
         $iban = str_ireplace('IBAN', '', $iban);
@@ -253,7 +282,7 @@ class Validation
         $iban = substr($iban, 4) . $country_code;
 
         // convert letters to digits
-        $iban = $this->_convert_to_numeric($iban);
+        $iban = $this->convertToNumeric($iban);
 
         return $iban;
     }
@@ -261,7 +290,7 @@ class Validation
     /**
      * Check if the thength of the IBAN is valid based on the country code
      *
-     * @param string    IBAN
+     * @param string $iban IBAN
      *
      * @return bool
      * @access  protected
@@ -271,13 +300,12 @@ class Validation
      * @version 1.0
      * @since 1.0
      */
-    protected function iban_length_is_valid($iban)
+    protected function ibanLengthIsValid($iban)
     {
         $country_code = substr($iban, 0, 2);
 
         // Hide error, if country isn't listed above, it's an invalid IBAN
-        if ($length = @$this->iban_length_by_country_code[ $country_code ])
-        {
+        if ($length = @$this->iban_length_by_country_code[ $country_code ]) {
             return (bool) (strlen($iban) == $length);
         }
 
@@ -287,7 +315,7 @@ class Validation
     /**
      * Convert all letters to their numeric values
      *
-     * @param string    IBAN
+     * @param string $iban IBAN
      *
      * @return iban
      * @access  protected
@@ -297,7 +325,7 @@ class Validation
      * @version 1.0
      * @since 1.0
      */
-    protected function _convert_to_numeric($iban)
+    protected function convertToNumeric($iban)
     {
         return str_replace(
             array_keys($this->convert),
@@ -309,7 +337,7 @@ class Validation
     /**
      * Divide IBAN by 97
      *
-     * @param string    Numeric IBAN
+     * @param string $numeric_iban Numeric IBAN
      *
      * @return int  remainder of division
      * @access  protected
@@ -319,7 +347,7 @@ class Validation
      * @version 1.0
      * @since 1.0
      */
-    protected function _divide_by_97_helper($numeric_iban)
+    protected function divideBy97Helper($numeric_iban)
     {
         return (int) bcmod($numeric_iban, 97);
     }
