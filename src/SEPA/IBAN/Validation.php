@@ -57,7 +57,7 @@ class Validation
      */
     public static function factory()
     {
-        return new static();
+        return new static;
     }
 
     /**
