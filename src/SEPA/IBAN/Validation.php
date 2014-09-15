@@ -48,7 +48,7 @@ class Validation
     /**
      * Factory method
      *
-     * @return object Sepa\IBAN\Validation
+     * @return Validation Sepa\IBAN\Validation
      *
      * @access	public
      *
@@ -65,8 +65,8 @@ class Validation
      *
      * @param string $iban IBAN
      *
-     * @return mixed    true on success, throws exception on fail
-     * @access  public
+     * @return boolean    true on success, throws exception on fail
+     * @access public
      * @throws InvalidIBANException
      *
      * @author Thorsten Schmidt
@@ -315,7 +315,7 @@ class Validation
     /**
      * Convert all letters to their numeric values
      *
-     * @param string $iban IBAN
+     * @param string $iban
      *
      * @return iban
      * @access  protected
