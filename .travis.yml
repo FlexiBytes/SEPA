@@ -8,5 +8,5 @@ before_script:
 
 script:
   - bin/phpspec run
-  - php scripts/phpcs --standard=PSR1 --report=summary src/
-  - php scripts/phpcs --standard=PSR2 --report=summary src/
+  - bin/phpcs --standard=PSR1 --report=summary src/
+  - bin/phpcs --standard=PSR2 --report=summary src/
