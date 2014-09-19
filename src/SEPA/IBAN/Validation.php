@@ -239,14 +239,17 @@ class Validation
     protected function validate($iban)
     {
         // Remove whitespaces
-        $iban = str_replace(' ', '', $iban);
+        $iban = $this->stripInvalidCharacters($iban);
 
         if (! $this->ibanLengthIsValid($iban)) {
             return false;
         }
 
-        // Convert to numeric
+        // prepare IBAN string
         $iban = $this->prepareIban($iban);
+
+        // convert letters to digits
+        $iban = $this->convertToNumeric($iban);
 
         // Divide numeric IBAN by 97
         $division_remainder = $this->divideBy97Helper($iban);
@@ -260,11 +263,35 @@ class Validation
     }
 
     /**
-     * Prepare IBAN to be used in calculation
+     * Strip "IBAN" and whitespaces
      *
      * @param string $iban IBAN
      *
-     * @return IBAN
+     * @return string
+     * @access  protected
+     *
+     * @author Thorsten Schmidt
+     * @date 20.09.2014
+     * @version 1.0
+     * @since 1.0
+     */
+    protected function stripInvalidCharacters($iban)
+    {
+        // Remove "IBAN" from string, if given
+        $iban = str_ireplace('IBAN', '', $iban);
+
+        // Remove whitspaces
+        $iban = str_replace(' ', '', $iban);
+
+        return $iban;
+    }
+
+    /**
+     * Move country code and checksum to end of IBAN
+     *
+     * @param string $iban IBAN
+     *
+     * @return string
      * @access  protected
      *
      * @author Thorsten Schmidt
@@ -274,15 +301,9 @@ class Validation
      */
     protected function prepareIban($iban)
     {
-        // Remove "IBAN" from string, if given
-        $iban = str_ireplace('IBAN', '', $iban);
-
-        // Set country code to end of iban
-        $country_code = substr($iban, 0, 4);
-        $iban = substr($iban, 4) . $country_code;
-
-        // convert letters to digits
-        $iban = $this->convertToNumeric($iban);
+        // Set country code and checksum to end of iban
+        $country_code_checksum = substr($iban, 0, 4);
+        $iban = substr($iban, 4) . $country_code_checksum;
 
         return $iban;
     }

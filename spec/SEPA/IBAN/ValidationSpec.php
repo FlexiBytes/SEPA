@@ -32,6 +32,8 @@ class ValidationSpec extends ObjectBehavior
 
     function it_should_return_true_on_valid_IBAN()
     {
+        $this->check('IBANAL47 2121 1009 0000 0002 3569 8741')->shouldReturn(true);
+        $this->check('IBAN AL47 2121 1009 0000 0002 3569 8741')->shouldReturn(true);
         $this->check('AL47 2121 1009 0000 0002 3569 8741')->shouldReturn(true);
         $this->check('AD12 0001 2030 2003 5910 0100')->shouldReturn(true);
         $this->check('AT61 1904 3002 3457 3201')->shouldReturn(true);
